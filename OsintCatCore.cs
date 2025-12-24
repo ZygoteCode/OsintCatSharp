@@ -1,23 +1,21 @@
-﻿using System.Text;
-using System.Text.Encodings.Web;
+﻿using System;
 
 namespace OsintCatSharp
 {
     public class OsintCatCore
     {
         private HttpClient _httpClient;
-        private string _baseUri, _osintCatApiKey;
+        private string _baseUri;
 
         public OsintCatCore(string osintCatApiKey)
         {
-            _osintCatApiKey = osintCatApiKey;
             _baseUri = "https://osintcat.net/api";
-            _httpClient = OsintCatUtils.CreateHttpClient();
+            _httpClient = OsintCatUtils.CreateHttpClient(osintCatApiKey);
         }
 
         private string GetRequest(string url)
         {
-            HttpResponseMessage response = _httpClient.GetAsync($"{_baseUri}{url}&id={_osintCatApiKey}").GetAwaiter().GetResult();
+            HttpResponseMessage response = _httpClient.GetAsync($"{_baseUri}{url}").GetAwaiter().GetResult();
 
             string body = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             response.Dispose();
@@ -38,6 +36,11 @@ namespace OsintCatSharp
         public string DiscordLookup(string query)
         {
             return Query("discord", query);
+        }
+
+        public string RobloxLookup(string query)
+        {
+            return Query("roblox", query);
         }
 
         public string RedditLookup(string query)
@@ -70,9 +73,34 @@ namespace OsintCatSharp
             return Query("github-osint", query);
         }
 
-        public string DiscordMonitor(string query)
+        public string GitHubUserInfo(string query)
         {
-            return Query("discord-stalker", query);
+            return Query("github-userinfo", query);
+        }
+
+        public string Minecraft(string query)
+        {
+            return Query("minecraft", query);
+        }
+
+        public string MinecraftLookup(string query, string type)
+        {
+            return GetRequest($"/minecraft?query={Uri.EscapeDataString(query)}&type={type}");
+        }
+
+        public string TwitterOSINT(string query)
+        {
+            return Query("twitter-osint", query);
+        }
+
+        public string UsernameLookup(string query)
+        {
+            return Query("user-osint", query);
+        }
+
+        public string DatabaseSearch(string query)
+        {
+            return Query("database-search", query);
         }
 
         public string IpInfo(string query)
@@ -85,9 +113,9 @@ namespace OsintCatSharp
             return Query("dns-resolver", query);
         }
 
-        public string Username(string query)
+        public string DomainLookup(string query)
         {
-            return Query("username", query);
+            return Query("domain", query);
         }
 
         public string ChileanName(string query)
@@ -95,9 +123,9 @@ namespace OsintCatSharp
             return Query("chilean-name", query);
         }
 
-        public string Minecraft(string query)
+        public string DiscordMonitor(string query)
         {
-            return Query("minecraft", query);
+            return Query("discord-stalker", query);
         }
     }
 }

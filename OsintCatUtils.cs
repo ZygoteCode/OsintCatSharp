@@ -5,7 +5,7 @@ namespace OsintCatSharp
 {
     internal class OsintCatUtils
     {
-        public static HttpClient CreateHttpClient()
+        public static HttpClient CreateHttpClient(string apiKey)
         {
             SocketsHttpHandler handler = new SocketsHttpHandler
             {
@@ -41,6 +41,8 @@ namespace OsintCatSharp
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
             };
 
+            client.DefaultRequestHeaders.TryAddWithoutValidation("x-purpose", "Email Investigation");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", apiKey);
             return client;
         }
     }
